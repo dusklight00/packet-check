@@ -1,9 +1,32 @@
 import PacketContainer from "./components/PacketContainer";
+import PacketCanvas from "./components/PacketCanvas";
 
 function App() {
   return (
-    <div>
-      <PacketContainer>hi</PacketContainer>
+    <div style={{ height: "100vh" }}>
+      <PacketCanvas>
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+        <PacketContainer />
+      </PacketCanvas>
     </div>
   );
 }
