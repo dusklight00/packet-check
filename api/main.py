@@ -30,10 +30,10 @@ def get_layer_fields_endpoint():
 
 @app.route("/create_packet")
 def create_packet_endpoint():
+    packet_name = request.args.get("packet_name")
+    print(packet_name)
     layers = request.args.get("layers")
     layers = json.loads(layers)
-
-    print(layers)
 
     if not isinstance(layers, list):
         return {"error": "Layers must be a list"}
@@ -48,21 +48,44 @@ def create_packet_endpoint():
         instance = create_instance_with_option(layer_name, options)
         layer_instances.append(instance)
 
-    packet = layer_instances[0]
+    packet_layers = layer_instances[0]
     for layer in layer_instances[1:]:
-        packet = packet / layer
+        packet_layers = packet_layers / layer
 
     packet_id = generate_uuid()
-    PACKETS[packet_id] = packet
+    packet_object = {
+        "packet_name": packet_name,
+        "layers": packet_layers,
+    }
+
+    PACKETS[packet_id] = packet_object
 
     return {"packet_id": packet_id}
 
 
+@app.route("/get_all_packet_ids")
+def get_all_packet_ids_endpoint():
+    packet_id_dict_map = {
+        packet_id: packet["packet_name"] for packet_id, packet in PACKETS.items()
+    }
+    return packet_id_dict_map
+
+
 @app.route("/get_packet")
-def get_packet():
+def get_packet_endpoint():
     packet_id = request.args.get("packet_id")
     packet = PACKETS.get(packet_id)
-    return packet_to_dict(packet)
+    packet_name = packet["packet_name"]
+    packet_layers = packet["layers"]
+    packet_dict = packet_to_dict(packet_layers)
+    return {"packet_name": packet_name, "layers": packet_dict}
+
+
+@app.route("/remove_packet")
+def remove_packet_enpoint():
+    packet_id = request.args.get("packet_id")
+    PACKETS.pop(packet_id)
+    return {"success": True}
 
 
 # @app.route("/send_packet")
@@ -71,8 +94,4 @@ def get_packet():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-
-    packet = Ether() / IP() / TCP()
-    packet_dict = packet_to_dict(packet)
-    pprint(packet_dict)
+    app.run(debug=True)
