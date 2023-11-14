@@ -6,9 +6,8 @@ from functions.packets import (
     packet_to_dict,
 )
 from functions.utils import generate_uuid
+from scapy.all import send
 import json
-from scapy.all import Ether, IP, TCP
-from pprint import pprint
 
 app = Flask(__name__)
 
@@ -48,14 +47,14 @@ def create_packet_endpoint():
         instance = create_instance_with_option(layer_name, options)
         layer_instances.append(instance)
 
-    packet_layers = layer_instances[0]
+    packet = layer_instances[0]
     for layer in layer_instances[1:]:
-        packet_layers = packet_layers / layer
+        packet = packet / layer
 
     packet_id = generate_uuid()
     packet_object = {
         "packet_name": packet_name,
-        "layers": packet_layers,
+        "packet": packet,
     }
 
     PACKETS[packet_id] = packet_object
@@ -76,9 +75,9 @@ def get_packet_endpoint():
     packet_id = request.args.get("packet_id")
     packet = PACKETS.get(packet_id)
     packet_name = packet["packet_name"]
-    packet_layers = packet["layers"]
-    packet_dict = packet_to_dict(packet_layers)
-    return {"packet_name": packet_name, "layers": packet_dict}
+    packet = packet["packet"]
+    packet_dict = packet_to_dict(packet)
+    return {"packet_name": packet_name, "packet": packet_dict}
 
 
 @app.route("/remove_packet")
@@ -88,10 +87,21 @@ def remove_packet_enpoint():
     return {"success": True}
 
 
-# @app.route("/send_packet")
-# def hello_world():
-#     return "Hello, World!"
+@app.route("/send_packet")
+def send_packet_endpoint():
+    packet_id = request.args.get("packet_id")
+    packet_obj = PACKETS.get(packet_id)
+    packet = packet_obj["packet"]
+    send(packet)
+    return {"success": True}
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    # from scapy.all import *
+
+    # packet = Ether() / IP() / TCP()
+    # packet.show()
+
+    # send(packet)
