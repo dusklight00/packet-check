@@ -90,7 +90,7 @@ def layer_to_dict(obj):
 
         if not isinstance(value, _native_value):
             value = layer_to_dict(value)
-        d[f.name] = value
+        d[f.name] = str(value)
     return {obj.name: d}
 
 
@@ -103,8 +103,6 @@ def packet_to_dict(packet):
         layer_dict = layer_to_dict(layer)
         layer_name = list(layer_dict.keys())[0]
         layer_options = layer_dict[layer_name]
-        if "options" in layer_options.keys():
-            del layer_options["options"]
         packet_dict.append({"layer_name": layer_name, "options": layer_options})
         count += 1
 

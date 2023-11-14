@@ -6,12 +6,36 @@ from functions.packets import (
     packet_to_dict,
 )
 from functions.utils import generate_uuid
-from scapy.all import send
+from multiprocessing import Process, Queue
+from scapy.all import send, sniff
 import json
 
 app = Flask(__name__)
+queue = Queue()
 
 PACKETS = dict()
+SNIFFED_PACKET_CACHE = []
+
+
+def packet_callback(packet, queue):
+    # Put the packet into the queue
+    queue.put(packet)
+
+
+def start_sniffing(queue):
+    # Start sniffing packets
+    sniff(prn=lambda packet: packet_callback(packet, queue))
+
+
+def get_sniffed_packets(queue):
+    # Get all packets from the queue
+    sniffed_packets = []
+    while not queue.empty():
+        packet = queue.get()
+        packet_dict = packet_to_dict(packet)
+        print(packet_dict)
+        sniffed_packets.append(packet_dict)
+    return sniffed_packets
 
 
 @app.route("/get_layers_list")
@@ -96,12 +120,13 @@ def send_packet_endpoint():
     return {"success": True}
 
 
+@app.route("/sniff")
+def sniff_endpoint():
+    sniffed_packets = get_sniffed_packets(queue)
+    return {"sniffed_packets": sniffed_packets}
+
+
 if __name__ == "__main__":
+    process = Process(target=start_sniffing, args=(queue,))
+    process.start()
     app.run(debug=True)
-
-    # from scapy.all import *
-
-    # packet = Ether() / IP() / TCP()
-    # packet.show()
-
-    # send(packet)
