@@ -22,9 +22,9 @@ def packet_callback(packet, queue):
     queue.put(packet)
 
 
-def start_sniffing(queue):
+def start_sniffing(queue, filter=""):
     # Start sniffing packets
-    sniff(prn=lambda packet: packet_callback(packet, queue))
+    sniff(prn=lambda packet: packet_callback(packet, queue), filter=filter)
 
 
 def get_sniffed_packets(queue):
@@ -127,10 +127,17 @@ def sniff_endpoint():
 
 @app.route("/start_sniff")
 def start_sniff_endpoint():
+    filter = request.args.get("filter", "")
     global SNIFF_PROCESS
     if SNIFF_PROCESS is not None:
         return {"success": False}
-    SNIFF_PROCESS = Process(target=start_sniffing, args=(queue,))
+    SNIFF_PROCESS = Process(
+        target=start_sniffing,
+        args=(
+            queue,
+            filter,
+        ),
+    )
     SNIFF_PROCESS.start()
     return {"success": True}
 
