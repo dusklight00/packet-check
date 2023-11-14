@@ -3,9 +3,12 @@ from functions.packets import (
     get_layers_list,
     get_layer_options,
     create_instance_with_option,
+    packet_to_dict,
 )
 from functions.utils import generate_uuid
 import json
+from scapy.all import Ether, IP, TCP
+from pprint import pprint
 
 app = Flask(__name__)
 
@@ -55,10 +58,21 @@ def create_packet_endpoint():
     return {"packet_id": packet_id}
 
 
+@app.route("/get_packet")
+def get_packet():
+    packet_id = request.args.get("packet_id")
+    packet = PACKETS.get(packet_id)
+    return packet_to_dict(packet)
+
+
 # @app.route("/send_packet")
 # def hello_world():
 #     return "Hello, World!"
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+
+    packet = Ether() / IP() / TCP()
+    packet_dict = packet_to_dict(packet)
+    pprint(packet_dict)

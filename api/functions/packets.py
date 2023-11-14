@@ -73,3 +73,39 @@ def get_layers_list():
         if layer.split(":")[0].strip() != ""
     ]
     return layers
+
+
+_native_value = (int, float, str, bytes, bool, list, tuple, set, dict, type(None))
+
+
+def layer_to_dict(obj):
+    d = {}
+
+    if not getattr(obj, "fields_desc", None):
+        return
+    for f in obj.fields_desc:
+        value = getattr(obj, f.name)
+        if value is type(None):
+            value = None
+
+        if not isinstance(value, _native_value):
+            value = layer_to_dict(value)
+        d[f.name] = value
+    return {obj.name: d}
+
+
+def packet_to_dict(packet):
+    packet_dict = []
+
+    count = 0
+    while packet.getlayer(count) is not None:
+        layer = packet.getlayer(count)
+        layer_dict = layer_to_dict(layer)
+        layer_name = list(layer_dict.keys())[0]
+        layer_options = layer_dict[layer_name]
+        if "options" in layer_options.keys():
+            del layer_options["options"]
+        packet_dict.append({"layer_name": layer_name, "options": layer_options})
+        count += 1
+
+    return packet_dict
