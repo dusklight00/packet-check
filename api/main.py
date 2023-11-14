@@ -15,10 +15,10 @@ queue = Queue()
 
 PACKETS = dict()
 SNIFFED_PACKET_CACHE = []
+SNIFF_PROCESS = None
 
 
 def packet_callback(packet, queue):
-    # Put the packet into the queue
     queue.put(packet)
 
 
@@ -33,7 +33,7 @@ def get_sniffed_packets(queue):
     while not queue.empty():
         packet = queue.get()
         packet_dict = packet_to_dict(packet)
-        print(packet_dict)
+
         sniffed_packets.append(packet_dict)
     return sniffed_packets
 
@@ -54,7 +54,6 @@ def get_layer_fields_endpoint():
 @app.route("/create_packet")
 def create_packet_endpoint():
     packet_name = request.args.get("packet_name")
-    print(packet_name)
     layers = request.args.get("layers")
     layers = json.loads(layers)
 
@@ -126,7 +125,25 @@ def sniff_endpoint():
     return {"sniffed_packets": sniffed_packets}
 
 
+@app.route("/start_sniff")
+def start_sniff_endpoint():
+    global SNIFF_PROCESS
+    if SNIFF_PROCESS is not None:
+        return {"success": False}
+    SNIFF_PROCESS = Process(target=start_sniffing, args=(queue,))
+    SNIFF_PROCESS.start()
+    return {"success": True}
+
+
+@app.route("/stop_sniff")
+def stop_sniff_endpoint():
+    global SNIFF_PROCESS
+    if SNIFF_PROCESS is None:
+        return {"success": False}
+    SNIFF_PROCESS.terminate()
+    SNIFF_PROCESS = None
+    return {"success": True}
+
+
 if __name__ == "__main__":
-    process = Process(target=start_sniffing, args=(queue,))
-    process.start()
     app.run(debug=True)
