@@ -95,7 +95,7 @@ def layer_to_dict(obj):
 
 
 def packet_to_dict(packet):
-    packet_dict = []
+    packet_layers = []
 
     count = 0
     while packet.getlayer(count) is not None:
@@ -103,7 +103,11 @@ def packet_to_dict(packet):
         layer_dict = layer_to_dict(layer)
         layer_name = list(layer_dict.keys())[0]
         layer_options = layer_dict[layer_name]
-        packet_dict.append({"layer_name": layer_name, "options": layer_options})
+        packet_layers.append({"layer_name": layer_name, "options": layer_options})
         count += 1
 
-    return packet_dict
+    packet_summary = packet.summary()
+    return {
+        "packet_summary": packet_summary,
+        "packet_layers": packet_layers,
+    }
