@@ -39,6 +39,7 @@ def get_layer_instance_options(instance):
 def get_layer_options(layer_name):
     _instance_reference = create_layer_instance_reference(layer_name)
     instance = _instance_reference()
+    instance.show()
     return get_layer_instance_options(instance)
 
 
@@ -47,9 +48,28 @@ def create_instance_with_option(layer_name, options):
     return _instance_reference(**options)
 
 
-options = get_layer_instance_options("IP")
-instance = create_instance_with_option("IP", options)
+from scapy.all import Ether, Padding
 
-packet = instance / instance
 
-packet.show()
+def is_malformed(packet):
+    # try:
+    #     # Try to dissect the packet
+    #     Ether(packet)
+    #     return False
+    # except:
+    #     # If an exception occurs, the packet is malformed
+    #     return True
+
+    return False
+
+
+def get_layers_list():
+    with io.StringIO() as buf, contextlib.redirect_stdout(buf):
+        ls()
+        output = buf.getvalue()
+    layers = [
+        layer.split(":")[0].strip()
+        for layer in output.split("\n")
+        if layer.split(":")[0].strip() != ""
+    ]
+    return layers
