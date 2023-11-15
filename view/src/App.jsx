@@ -1,32 +1,11 @@
 import PacketContainer from "./components/PacketContainer";
 import PacketCanvas from "./components/PacketCanvas";
+import StartStopGroup from "./components/StartStopGroup";
 
 function App() {
   return (
     <div style={{ height: "100vh" }}>
-      <PacketCanvas>
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-        <PacketContainer />
-      </PacketCanvas>
+      <StartStopGroup />
     </div>
   );
 }
