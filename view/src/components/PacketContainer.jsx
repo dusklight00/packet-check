@@ -69,7 +69,7 @@ function PacketContainer() {
 
   return (
     <Box
-      maxW="full"
+      width="full"
       borderBottomWidth="1px"
       padding="10px 20px"
       cursor="pointer"

@@ -12,7 +12,7 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function CustomPackets() {
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box width="full" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Box p="6">
         <Box
           mt="1"

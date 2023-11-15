@@ -13,7 +13,7 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function MaliciousChecks() {
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+    <Box width="full" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Box p="6">
         <Box
           mt="1"
@@ -47,7 +47,7 @@ function MaliciousChecks() {
         </Box>
         <Flex justifyContent="center" margin="10px 0px 0px 0px">
           <Button maxW="full" size="md" variant="solid" leftIcon={<AddIcon />}>
-            Create New Packet
+            Add Checks
           </Button>
         </Flex>
       </Box>
