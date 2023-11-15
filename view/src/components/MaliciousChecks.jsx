@@ -5,12 +5,13 @@ import {
   Flex,
   Spacer,
   Divider,
+  Checkbox,
   ButtonGroup,
   IconButton,
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
-function CustomPackets() {
+function MaliciousChecks() {
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Box p="6">
@@ -22,7 +23,7 @@ function CustomPackets() {
           noOfLines={1}
           p="0px 0px 10px 0px"
         >
-          Custom Packets
+          Malicious Checks
         </Box>
         <Divider />
         <Box
@@ -30,18 +31,15 @@ function CustomPackets() {
           // borderBottomWidth="1px"
           padding="20px 20px"
           cursor="pointer"
-          //   _hover={{ backgroundColor: "gray.700" }}
+          // _hover={{ backgroundColor: "gray.700" }}
           // margin="10px 0"
         >
           <Flex alignItems="center">
-            My Packet
+            <Checkbox value="check-1">Check #1</Checkbox>
             <Spacer />
             <ButtonGroup spacing="0" isAttached>
               <Button size="sm" variant="outline">
                 Edit
-              </Button>
-              <Button size="sm" variant="outline">
-                Send
               </Button>
               <IconButton size="sm" variant="outline" icon={<DeleteIcon />} />
             </ButtonGroup>
@@ -57,4 +55,4 @@ function CustomPackets() {
   );
 }
 
-export default CustomPackets;
+export default MaliciousChecks;
