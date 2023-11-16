@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 from functions.packets import (
     get_layers_list,
     get_layer_options,
@@ -39,12 +40,14 @@ def get_sniffed_packets(queue):
 
 
 @app.route("/get_layers_list")
+@cross_origin()
 def get_layers_list_endpoint():
     layers = get_layers_list()
     return {"layers": layers}
 
 
 @app.route("/get_layer_fields")
+@cross_origin()
 def get_layer_fields_endpoint():
     layer_name = request.args.get("layer_name")
     fields = get_layer_options(layer_name)
@@ -52,6 +55,7 @@ def get_layer_fields_endpoint():
 
 
 @app.route("/create_packet")
+@cross_origin()
 def create_packet_endpoint():
     packet_name = request.args.get("packet_name")
     layers = request.args.get("layers")
@@ -86,6 +90,7 @@ def create_packet_endpoint():
 
 
 @app.route("/get_all_packet_ids")
+@cross_origin()
 def get_all_packet_ids_endpoint():
     packet_id_dict_map = {
         packet_id: packet["packet_name"] for packet_id, packet in PACKETS.items()
@@ -94,6 +99,7 @@ def get_all_packet_ids_endpoint():
 
 
 @app.route("/get_packet")
+@cross_origin()
 def get_packet_endpoint():
     packet_id = request.args.get("packet_id")
     packet = PACKETS.get(packet_id)
@@ -104,6 +110,7 @@ def get_packet_endpoint():
 
 
 @app.route("/remove_packet")
+@cross_origin()
 def remove_packet_enpoint():
     packet_id = request.args.get("packet_id")
     PACKETS.pop(packet_id)
@@ -111,6 +118,7 @@ def remove_packet_enpoint():
 
 
 @app.route("/send_packet")
+@cross_origin()
 def send_packet_endpoint():
     packet_id = request.args.get("packet_id")
     packet_obj = PACKETS.get(packet_id)
@@ -120,12 +128,14 @@ def send_packet_endpoint():
 
 
 @app.route("/sniff")
+@cross_origin()
 def sniff_endpoint():
     sniffed_packets = get_sniffed_packets(queue)
     return {"sniffed_packets": sniffed_packets}
 
 
 @app.route("/start_sniff")
+@cross_origin()
 def start_sniff_endpoint():
     filter = request.args.get("filter", "")
     global SNIFF_PROCESS
@@ -143,6 +153,7 @@ def start_sniff_endpoint():
 
 
 @app.route("/stop_sniff")
+@cross_origin()
 def stop_sniff_endpoint():
     global SNIFF_PROCESS
     if SNIFF_PROCESS is None:
