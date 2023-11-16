@@ -32,11 +32,7 @@ function App() {
                 <FilterInput />
               </Flex>
             </Box>
-            <PacketCanvas>
-              <PacketContainer />
-              <PacketContainer />
-              <PacketContainer />
-            </PacketCanvas>
+            <PacketCanvas />
           </VStack>
         </Box>
       </Flex>
