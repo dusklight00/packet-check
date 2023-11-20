@@ -45,6 +45,7 @@ def get_layer_options(layer_name):
 
 def create_instance_with_option(layer_name, options):
     _instance_reference = create_layer_instance_reference(layer_name)
+    print(options)
     return _instance_reference(**options)
 
 

@@ -6,12 +6,14 @@ from functions.packets import (
     create_instance_with_option,
     packet_to_dict,
 )
-from functions.utils import generate_uuid
+from functions.utils import generate_uuid, auto_convert
 from multiprocessing import Process, Queue
 from scapy.all import send, sniff
 import json
+from pprint import pprint
 
 app = Flask(__name__)
+# CORS(app)
 queue = Queue()
 
 PACKETS = dict()
@@ -34,7 +36,6 @@ def get_sniffed_packets(queue):
     while not queue.empty():
         packet = queue.get()
         packet_dict = packet_to_dict(packet)
-
         sniffed_packets.append(packet_dict)
     return sniffed_packets
 
@@ -56,7 +57,7 @@ def get_layer_fields_endpoint():
 
 @app.route("/create_packet")
 @cross_origin()
-def create_packet_endpoint():
+def create_packet_endpount():
     packet_name = request.args.get("packet_name")
     layers = request.args.get("layers")
     layers = json.loads(layers)
@@ -71,6 +72,10 @@ def create_packet_endpoint():
     for layer in layers:
         layer_name = layer["layer_name"]
         options = layer["options"]
+
+        for key, value in options.items():
+            options[key] = auto_convert(value)
+
         instance = create_instance_with_option(layer_name, options)
         layer_instances.append(instance)
 

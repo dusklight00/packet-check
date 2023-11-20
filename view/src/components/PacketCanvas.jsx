@@ -15,7 +15,6 @@ function PacketCanvas() {
         setPackets(
           [...response.data.sniffed_packets.reverse(), ...packets].splice(0, 10)
         );
-        console.log(packets);
       });
     }, 1000);
     return () => clearInterval(interval);
