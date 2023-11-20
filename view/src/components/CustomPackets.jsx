@@ -252,6 +252,40 @@ function CreatePacketModel({ isOpen, onClose }) {
 
 function CustomPackets() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [packets, setPackets] = useState([]);
+
+  const getPackets = async () => {
+    const response = await instance.get("/get_all_packet_ids");
+    const packetIDs = response.data;
+    const packets = [];
+    for (let packetID in packetIDs) {
+      const packet = await instance.get("/get_packet", {
+        params: {
+          packet_id: packetID,
+        },
+      });
+      packets.push({ ...packet.data, packet_id: packetID });
+    }
+    setPackets(packets);
+  };
+
+  const removePacket = async (packetID) => {
+    const response = await instance.get("/remove_packet", {
+      params: {
+        packet_id: packetID,
+      },
+    });
+    return true;
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getPackets();
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   return (
     <Box width="full" borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -275,19 +309,28 @@ function CustomPackets() {
           //   _hover={{ backgroundColor: "gray.700" }}
           // margin="10px 0"
         >
-          <Flex alignItems="center">
-            My Packet
-            <Spacer />
-            <ButtonGroup spacing="0" isAttached>
-              <Button size="sm" variant="outline">
+          {packets.map((packet, key) => (
+            <Flex alignItems="center" key={key}>
+              {packet.packet_name}
+              <Spacer />
+              <ButtonGroup spacing="0" isAttached>
+                {/* <Button size="sm" variant="outline">
                 Edit
-              </Button>
-              <Button size="sm" variant="outline">
-                Send
-              </Button>
-              <IconButton size="sm" variant="outline" icon={<DeleteIcon />} />
-            </ButtonGroup>
-          </Flex>
+              </Button> */}
+                <Button size="sm" variant="outline">
+                  Send
+                </Button>
+                <IconButton
+                  size="sm"
+                  variant="outline"
+                  icon={<DeleteIcon />}
+                  onClick={() => {
+                    removePacket(packet.packet_id);
+                  }}
+                />
+              </ButtonGroup>
+            </Flex>
+          ))}
         </Box>
         <Flex justifyContent="center" margin="10px 0px 0px 0px">
           <Button
