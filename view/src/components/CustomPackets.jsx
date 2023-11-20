@@ -278,6 +278,15 @@ function CustomPackets() {
     return true;
   };
 
+  const sendPacket = async (packetID) => {
+    await instance.get("/send_packet", {
+      params: {
+        packet_id: packetID,
+      },
+    });
+    return true;
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       getPackets();
@@ -317,7 +326,13 @@ function CustomPackets() {
                 {/* <Button size="sm" variant="outline">
                 Edit
               </Button> */}
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    sendPacket(packet.packet_id);
+                  }}
+                >
                   Send
                 </Button>
                 <IconButton
