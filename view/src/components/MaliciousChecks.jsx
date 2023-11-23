@@ -8,10 +8,45 @@ import {
   Checkbox,
   ButtonGroup,
   IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure,
+  ModalFooter,
+  Textarea,
+  Input,
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
+function MaliciousPacketCheckModel({ isOpen, onClose }) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Malicious Check</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Input placeholder="Malicious Check Name" m="0px 0px 10px 0px" />
+          <Textarea placeholder="Enter the code..."></Textarea>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button variant="ghost" mr={3} onClick={onClose}>
+            Close
+          </Button>
+          <Button colorScheme="blue">Add Check</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
 function MaliciousChecks() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box width="full" borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Box p="6">
@@ -46,9 +81,16 @@ function MaliciousChecks() {
           </Flex>
         </Box>
         <Flex justifyContent="center" margin="10px 0px 0px 0px">
-          <Button maxW="full" size="md" variant="solid" leftIcon={<AddIcon />}>
+          <Button
+            maxW="full"
+            size="md"
+            variant="solid"
+            leftIcon={<AddIcon />}
+            onClick={onOpen}
+          >
             Add Checks
           </Button>
+          <MaliciousPacketCheckModel isOpen={isOpen} onClose={onClose} />
         </Flex>
       </Box>
     </Box>
