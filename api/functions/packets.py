@@ -112,3 +112,21 @@ def packet_to_dict(packet):
         "packet_summary": packet_summary,
         "packet_layers": packet_layers,
     }
+
+
+def check_packet_code(packet, code):
+    modified_code = code + "\nresult = check(packet) \nprint(result)"
+    buffer = io.StringIO()
+    sys.stdout = buffer
+
+    try:
+        exec(modified_code)
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        output = buffer.getvalue()
+        sys.stdout = sys.__stdout__
+        buffer.close()
+
+    return output

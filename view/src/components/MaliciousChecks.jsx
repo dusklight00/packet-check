@@ -85,7 +85,6 @@ function MaliciousChecks() {
   const [checks, setChecks] = useState({});
 
   const addCheck = (checkName, checkCode) => {
-    // console.log(checkName, checkCode);
     instance.post("/add_check", { name: checkName, code: checkCode });
   };
 

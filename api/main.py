@@ -5,6 +5,7 @@ from functions.packets import (
     get_layer_options,
     create_instance_with_option,
     packet_to_dict,
+    check_packet_code,
 )
 from functions.utils import generate_uuid, auto_convert
 from multiprocessing import Process, Queue
@@ -37,6 +38,7 @@ def get_sniffed_packets(queue):
     while not queue.empty():
         packet = queue.get()
         packet_dict = packet_to_dict(packet)
+        packet_dict["packet_object"] = packet
         sniffed_packets.append(packet_dict)
     return sniffed_packets
 
@@ -137,6 +139,17 @@ def send_packet_endpoint():
 @cross_origin()
 def sniff_endpoint():
     sniffed_packets = get_sniffed_packets(queue)
+    for packet in sniffed_packets:
+        is_malicious = False
+        for name, code in CHECKS.items():
+            result = check_packet_code(packet, code)
+            if result:
+                is_malicious = True
+                break
+        packet["is_malicious"] = is_malicious
+    sniffed_packets_without_object = sniffed_packets.copy()
+    for packet in sniffed_packets_without_object:
+        packet.pop("packet_object")
     return {"sniffed_packets": sniffed_packets}
 
 

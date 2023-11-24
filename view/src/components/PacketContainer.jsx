@@ -74,7 +74,12 @@ function PacketContainer({ config }) {
       borderBottomWidth="1px"
       padding="10px 20px"
       cursor="pointer"
-      _hover={{ backgroundColor: "gray.700" }}
+      _hover={
+        config.is_malicious
+          ? { backgroundColor: "red.700" }
+          : { backgroundColor: "gray.700" }
+      }
+      backgroundColor={config.is_malicious ? "red.500" : "gray.800"}
       // margin="10px 0"
     >
       <Flex alignItems="center">
