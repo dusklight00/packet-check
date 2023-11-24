@@ -143,7 +143,7 @@ def sniff_endpoint():
         is_malicious = False
         for name, code in CHECKS.items():
             result = check_packet_code(packet, code)
-            if result:
+            if result.strip() == "True":
                 is_malicious = True
                 break
         packet["is_malicious"] = is_malicious
