@@ -17,6 +17,7 @@ app = Flask(__name__)
 queue = Queue()
 
 PACKETS = dict()
+CHECKS = dict()
 SNIFFED_PACKET_CACHE = []
 SNIFF_PROCESS = None
 
@@ -165,6 +166,31 @@ def stop_sniff_endpoint():
         return {"success": False}
     SNIFF_PROCESS.terminate()
     SNIFF_PROCESS = None
+    return {"success": True}
+
+
+@app.route("/process_code", methods=["POST"])
+@cross_origin()
+def process_code_endpoint():
+    data = request.get_json()
+    code = data.get("code")
+    exec(code)
+    return {"success": True}
+
+
+@app.route("/get_checks")
+@cross_origin()
+def get_checks_endpoint():
+    return {"checks": CHECKS}
+
+
+@app.route("/add_check", methods=["POST"])
+@cross_origin()
+def add_check_endpoint():
+    data = request.get_json()
+    name = data.get("name")
+    code = data.get("code")
+    CHECKS[name] = code
     return {"success": True}
 
 
