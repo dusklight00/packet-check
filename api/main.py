@@ -207,5 +207,15 @@ def add_check_endpoint():
     return {"success": True}
 
 
+@app.route("/remove_check", methods=["POST"])
+@cross_origin()
+def remove_check_endpoint():
+    data = request.get_json()
+    name = data.get("name")
+    print(name)
+    CHECKS.pop(name)
+    return {"success": True}
+
+
 if __name__ == "__main__":
     app.run(debug=True)

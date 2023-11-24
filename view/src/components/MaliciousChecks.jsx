@@ -88,10 +88,19 @@ function MaliciousChecks() {
     instance.post("/add_check", { name: checkName, code: checkCode });
   };
 
+  const removeCheck = (checkName) => {
+    instance.post("/remove_check", { name: checkName });
+  };
+
   const updateChecks = () => {
     instance.get("/get_checks").then((res) => {
       setChecks(res.data.checks);
     });
+  };
+
+  const handleDelete = (e) => {
+    const name = e.target.id;
+    removeCheck(name);
   };
 
   useEffect(() => {
@@ -148,10 +157,11 @@ function MaliciousChecks() {
                 <IconButton
                   aria-label="Delete Check"
                   icon={<DeleteIcon />}
+                  id={key}
                   colorScheme="red"
                   variant="outline"
                   size="sm"
-                  // onClick={handleDelete}
+                  onClick={handleDelete}
                 />
               </Flex>
             ))}
