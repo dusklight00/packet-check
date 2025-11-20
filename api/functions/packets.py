@@ -3,6 +3,7 @@ from scapy.all import *
 import importlib
 import io
 import contextlib
+from pprint import pprint
 
 
 def create_layer_instance_reference(layer_name):
